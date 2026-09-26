@@ -267,7 +267,8 @@ class ProductResource extends Resource
                                 ->disk('public')
                                 ->directory('products')
                                 ->acceptedFileTypes([
-                                    'image/jpeg', 'image/png', 'image/webp', 'image/svg+xml',
+                                    // بلا SVG: لا طبّع لدينا له — رفعه يفتح باب XSS مخزَّن على نفس النطاق
+                                    'image/jpeg', 'image/png', 'image/webp',
                                     'video/mp4', 'video/webm', 'video/quicktime',
                                 ])
                                 ->maxSize(10240)

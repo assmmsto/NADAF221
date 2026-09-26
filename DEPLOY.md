@@ -10,7 +10,7 @@
 
 1. افتح [infinityfree.com](https://infinityfree.com) وسجّل حسابًا مجانيًا (بريد إلكتروني فقط).
 2. من لوحة التحكم اختر **Create Account** لإنشاء موقع:
-   - **Domain**: اختر نطاقًا فرعيًا مجانيًا مثل `nadaf.free.nf` أو `nadafstore.great-site.net`.
+   - **Domain**: اختر نطاقًا فرعيًا مجانيًا مثل `nadaf.wuaze.com` أو `nadafstore.great-site.net`.
    - اختر PHP **8.3** إن طُلب.
 3. بعد الإنشاء، افتح تفاصيل الحساب واحتفظ بهذه البيانات (ستجدها في صفحة الحساب):
    - **FTP** : Hostname / Username / Password
@@ -32,13 +32,13 @@
 APP_NAME="NADAF | نداف"
 APP_ENV=production
 APP_DEBUG=false
-APP_URL=https://nadaf.free.nf        # رابط موقعك الفعلي
+APP_URL=https://nadaf.wuaze.com        # رابط موقعك الفعلي
 
 APP_LOCALE=ar
 APP_FALLBACK_LOCALE=en
 
-# نفس المفاتيح المحلية — انسخها من .env المحلي
-APP_KEY=base64:xxxxxxxx              # نفس مفتاحك المحلي أو ولّد جديدًا
+# ولّد مفتاحًا جديدًا للإنتاج دائمًا — لا تنسخ مفتاح التطوير أبدًا
+APP_KEY=base64:xxxxxxxx              # من الأمر: php artisan key:generate --show
 
 # قاعدة بيانات الاستضافة (من صفحة MySQL Databases)
 DB_CONNECTION=mysql
@@ -179,7 +179,7 @@ E:\tools\php83\php.exe artisan migrate:fresh --seed --force   # يهيّئ قا�
 بما أن InfinityFree **يمنع SSH/artisan**، الأسهل إعداد حزمة تهيئة ويب مرة واحدة:
 
 1. ارفع مؤقتًا ملف `setup.php` في `htdocs` بمحتوى يدير الترحيلات عبر الويب (استخدم حزمة مثل `laravel/setup` أو شغّل الترحيلات من صفحة مؤقتة بسيطة تستدعي `Artisan::call('migrate')` و `Artisan::call('db:seed')`).
-2. افتح `https://nadaf.free.nf/setup.php` من المتصفح مرة واحدة.
+2. افتح `https://nadaf.wuaze.com/setup.php` من المتصفح مرة واحدة.
 3. **احذف الملف فورًا بعد نجاحه.**
 
 نموذج `setup.php` (احذفه بعد الاستخدام!):
@@ -218,8 +218,8 @@ echo "DONE - احذف هذا الملف الآن!";
    > حتى تمسحه. بعد أي تعديل أنشئ ملفًا يستدعي `optimize:clear` أو احذف
    > `bootstrap/cache/config.php` و `bootstrap/cache/routes-*.php`.
 
-4. افتح موقعك: `https://nadaf.free.nf` — يجب أن يعمل المتجر.
-5. لوحة الأدمن: `https://nadaf.free.nf/admin` بنفس بيانات الأدمن المحلية.
+4. افتح موقعك: `https://nadaf.wuaze.com` — يجب أن يعمل المتجر.
+5. لوحة الأدمن: `https://nadaf.wuaze.com/admin` بنفس بيانات الأدمن المحلية.
 6. من **الإعدادات العامة** في اللوحة: فعّل إشعارات تيليجرام (اختبرها) والبريد، وعدّل بيانات الدفع والتواصل الحقيقية.
 
 ## الخطوة 6 — ما بعد الإطلاق
