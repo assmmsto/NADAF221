@@ -10,7 +10,7 @@
 - أصول Vite مبنية (`npm run build`)
 - فحص أمني كامل — التقرير: `E:\reports\security\nadaf-2026-09-27.md`
 - حزمة النشر: `A:\nadaf-deploy.zip` (تضم vendor وpublic/storage و.env الإنتاجي)
-- المستودع: `https://github.com/assmmsto/nadaff`
+- المستودع: `https://github.com/assmmsto/NADAF221`
 - سكربت التهيئة `deploy-setup.php` محصّن: التوكن خارج الكود في ملف `.setup-token`
   (مستثنى من git)، مقارنة timing-safe، وحذف ذاتي بعد نجاح التهيئة.
 
