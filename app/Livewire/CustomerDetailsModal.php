@@ -94,6 +94,25 @@ class CustomerDetailsModal extends Component
         $message = $this->message($customer);
 
         if ($this->target === 'cart') {
+            // خصم الكميات من المخزون — طلب واتساب يستهلك المخزون فعلياً
+            // (نفد صنفٌ أثناء الإرسال؟ الطلب يُتابع يدوياً ولا يُوقف)
+            foreach (CartService::detailed() as $item) {
+                if ($item->variant) {
+                    try {
+                        \App\Services\StockService::record(
+                            $item->variant->id,
+                            'sale',
+                            -((int) $item->qty),
+                            null,
+                            null,
+                            'طلب واتساب — '.$customer['phone'],
+                        );
+                    } catch (\Throwable $e) {
+                        report($e);
+                    }
+                }
+            }
+
             \Illuminate\Support\Facades\Session::forget(\App\Services\CartService::SESSION_KEY);
         }
 

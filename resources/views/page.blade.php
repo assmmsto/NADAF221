@@ -6,6 +6,21 @@
     <div class="container-x mt-6 max-w-4xl">
         <h1 class="mb-6 text-2xl font-extrabold">{{ $page->title }}</h1>
 
+        {{-- زر الموقع على خرائط غوغل — صفحة «من نحن» فقط، والرابط يديره الأدمن من الإعدادات --}}
+        @if ($page->slug === 'about' && setting('maps_url'))
+            <div class="card mb-6 flex items-center justify-between gap-4 p-5 sm:p-6">
+                <div>
+                    <h2 class="text-base font-extrabold">موقعنا على خرائط غوغل</h2>
+                    <p class="text-xs text-nad-mut">تجد المتجر بسهولة — الاتجاهات والمسافة وزيارات العملاء.</p>
+                </div>
+                <a href="{{ setting('maps_url') }}" target="_blank" rel="noopener"
+                   class="nad-btn-brass flex shrink-0 items-center gap-2 !text-sm">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M12 21s-7-5.5-7-11a7 7 0 1 1 14 0c0 5.5-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+                    افتح الخريطة
+                </a>
+            </div>
+        @endif
+
         {{-- النص العام إن وجد --}}
         @if ($page->content)
             <div class="card prose prose-sm max-w-none p-6 leading-8 sm:p-8 [&_h3]:font-extrabold [&_strong]:text-nad-ivory">

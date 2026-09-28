@@ -144,6 +144,12 @@ class Settings extends Page
                         ->maxLength(5)
                         ->placeholder('963')
                         ->helperText('أرقام بلا مفتاح: هاتف العميل المحفوظ محليًا مثل `0987654365` لا يفتح على واتساب أبدًا. اكتب المفتاح هنا (‏963 لسوريا) فيُستبدل الصفر به عند بناء رابط المراسلة.'),
+                    Forms\Components\TextInput::make('maps_url')
+                        ->label('رابط الموقع على خرائط غوغل')
+                        ->url()
+                        ->maxLength(500)
+                        ->placeholder('https://maps.app.goo.gl/…')
+                        ->helperText('الصق رابط متجرك من خرائط غوغل — يظهر زر «موقعنا على الخريطة» في صفحة «من نحن» بعد الحفظ.'),
                 ])->columns(3),
 
                 Forms\Components\Section::make('العملة')

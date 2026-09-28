@@ -85,13 +85,11 @@
                 @endif
             </a>
 
-            <form action="{{ route('search') }}" method="GET" class="nad-search relative hidden flex-1 md:flex">
-                <input type="search" name="q" value="{{ request('q') }}" placeholder="{{ __('nav.search_placeholder') }}">
-                <x-shop-icon name="search" class="pointer-events-none h-4 w-4 text-nad-dim" />
-            </form>
+            {{-- ═══ السلة — مكان حقل البحث سابقاً: بارزة في وسط الترويسة ═══
+                 البحث صار أيقونة تنفتح بالنقر (يمين المجموعة) بطلب المالك. --}}
+            <livewire:header-cart />
 
             <div class="ms-auto flex items-center gap-2">
-                {{-- مبدّل الوضع: داكن (افتراضي) ↔ فاتح — يُحفظ في كوكي سنة كاملة --}}
                 <button type="button"
                         class="nad-theme"
                         onclick="nadSetTheme(document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark')"
@@ -109,12 +107,8 @@
                        class="px-3 py-1.5 text-[10.5px] font-bold tracking-widest transition {{ session('currency') === 'syp' ? 'bg-nad-bg text-nad-champ' : 'text-nad-mut' }}">SYP ل.س</a>
                 </div>
 
-                @if (! inquiry_mode())
-                    <livewire:header-cart />
-                @endif
-
-                {{-- أيقونة البحث على الجوال — تفتح حقل البحث عند النقر --}}
-                <div x-data="{ searchOpen: false }" class="relative md:hidden">
+                {{-- أيقونة البحث — لكل المقاسات: تفتح حقل البحث عند النقر --}}
+                <div x-data="{ searchOpen: false }" class="relative">
                     <button type="button"
                             class="rounded-lg p-2 text-nad-ivory/80 hover:text-nad-champ"
                             aria-label="{{ __('nav.search_placeholder') }}"
@@ -235,8 +229,9 @@
     {{-- الشات العائم بنمط nad --}}
     <livewire:floating-chat />
 
-    {{-- زر تثبيت التطبيق PWA — يظهر فقط عندما يسمح المتصفح بالتثبيت --}}
-    <button id="nad-pwa-install" class="hidden fixed z-[90] items-center gap-2 rounded-full border border-nad-brass/60 bg-nad-surface px-4 py-2.5 text-xs font-extrabold text-nad-champ shadow-2xl"
+    {{-- زر تثبيت التطبيق PWA — ظاهر دائماً؛ النقر يُطلق تثبيت المتصفح
+         أو يعرض خطوات التثبيت اليدوي (آيفون/متصفحات بلا beforeinstallprompt) --}}
+    <button id="nad-pwa-install" class="fixed z-[90] flex items-center gap-2 rounded-full border border-nad-brass/60 bg-nad-surface px-4 py-2.5 text-xs font-extrabold text-nad-champ shadow-2xl"
             style="bottom: 96px; inset-inline-start: 18px;">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-4 w-4" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16"/></svg>
         {{ __('nav.home') === 'الرئيسية' ? 'تثبيت التطبيق' : 'Install app' }}
@@ -248,8 +243,6 @@
             window.addEventListener('beforeinstallprompt', function (e) {
                 e.preventDefault();
                 deferred = e;
-                var b = btn();
-                if (b) { b.classList.remove('hidden'); b.classList.add('flex'); }
             });
             window.addEventListener('appinstalled', function () {
                 var b = btn();
@@ -257,14 +250,25 @@
             });
             document.addEventListener('click', function (e) {
                 var b = e.target && e.target.closest && e.target.closest('#nad-pwa-install');
-                if (b && deferred) {
+                if (!b) return;
+
+                if (deferred) {
                     deferred.prompt();
                     deferred.userChoice.finally(function () {
+                        deferred = null;
                         var x = btn();
                         if (x) { x.classList.add('hidden'); x.classList.remove('flex'); }
                     });
-                    deferred = null;
+
+                    return;
                 }
+
+                // بلا beforeinstallprompt (آيفون/سفاري): خطوات التثبيت اليدوي
+                var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
+                var msg = ios
+                    ? 'لتثبيت التطبيق على آيفون: اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية».'
+                    : 'لتثبيت التطبيق: افتح قائمة المتصفح ثم اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».';
+                alert(msg);
             });
         })();
     </script>
