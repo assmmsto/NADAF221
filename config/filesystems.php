@@ -44,8 +44,12 @@ return [
             // بلا رابط رمزي. الاستضافات المجانية (FTP) لا تنشئ symlinks،
             // فقرص storage/app/public يبقى معزولاً عن الويب وتنكسر كل الصور.
             // المجلد يحوي: products · categories · slides · branding · payment-proofs
-            'root' => public_path('storage'),
-            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/storage',
+            //
+            // المجلد `uploads` منفصل عن `storage/framework` عمداً: على استضافة
+            // تضع المشروع كاملاً داخل جذر الويب، فلو تصادما لmixed ملفات
+            // framework القابلة للكتابة مع صور المستخدمين في شجرة واحدة.
+            'root' => public_path('uploads'),
+            'url' => rtrim(env('APP_URL', 'http://localhost'), '/').'/uploads',
             'visibility' => 'public',
             'throw' => false,
             'report' => false,

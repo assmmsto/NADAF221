@@ -8,20 +8,10 @@ return new class extends Migration
 {
     public function up(): void
     {
-        // سجل حركات المخزون — يوثّق كل حركة بسياقها الكامل
-        Schema::create('stock_movements', function (Blueprint $table) {
-            $table->id();
-            $table->foreignId('variant_id')->constrained('product_variants')->cascadeOnDelete();
-            $table->string('type', 20); // sale | return | receive | adjust | damage
-            $table->integer('quantity'); // موجب = دخول، سالب = خروج
-            $table->integer('balance_before');
-            $table->integer('balance_after');
-            $table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('purchase_invoice_id')->nullable()->constrained()->nullOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
-            $table->string('note')->nullable();
-            $table->timestamps();
-        });
+        // ترتيب الإنشاء مقصود: الجداول المُشار إليها بمفاتيح أجنبية أولاً —
+        // MariaDB يرفض FK إلى جدول لم يُنشأ بعد (errno 150)، بينما SQLite
+        // محلياً يقبلها، ولهذا لم يظهر العطل محلياً.
+        // الترتيب: الموردون ← فواتير الشراء ← بنودها ← حركات المخزون.
 
         // الموردون
         Schema::create('suppliers', function (Blueprint $table) {
@@ -54,13 +44,28 @@ return new class extends Migration
             $table->decimal('unit_cost', 10, 2)->nullable();
             $table->timestamps();
         });
+
+        // سجل حركات المخزون — يوثّق كل حركة بسياقها الكامل
+        Schema::create('stock_movements', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('variant_id')->constrained('product_variants')->cascadeOnDelete();
+            $table->string('type', 20); // sale | return | receive | adjust | damage
+            $table->integer('quantity'); // موجب = دخول، سالب = خروج
+            $table->integer('balance_before');
+            $table->integer('balance_after');
+            $table->foreignId('order_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('purchase_invoice_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->string('note')->nullable();
+            $table->timestamps();
+        });
     }
 
     public function down(): void
     {
+        Schema::dropIfExists('stock_movements');
         Schema::dropIfExists('purchase_invoice_items');
         Schema::dropIfExists('purchase_invoices');
         Schema::dropIfExists('suppliers');
-        Schema::dropIfExists('stock_movements');
     }
 };

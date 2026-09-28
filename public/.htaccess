@@ -11,7 +11,13 @@
 
     # Handle X-XSRF-Token Header
     RewriteCond %{HTTP:x-xsrf-token} .
-    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:X-XSRF-Token}]
+    RewriteRule .* - [E=HTTP_X_XSRF_TOKEN:%{HTTP:x-xsrf-token}]
+
+    # ─── حماية: منع الوصول لملفات التطبيق داخل جذر الويب ───
+    # المشروع منشور كاملاً داخل مجلد الويب (open_basedir)، فتصير .env وvendor/
+    # داخل شجرة الويب. بدون هذه القواعد يُكشف APP_KEY وDB_PASSWORD.
+    RewriteRule ^(app|bootstrap|config|database|lang|resources|routes|storage|vendor|tests|node_modules|artisan)(/|$) - [F,L]
+    RewriteRule ^(composer\.(json|lock)|package(-lock)?\.json|phpunit\.xml|secrets\.php)$ - [F,L]
 
     # Redirect Trailing Slashes If Not A Folder...
     RewriteCond %{REQUEST_FILENAME} !-d
@@ -23,3 +29,18 @@
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteRule ^ index.php [L]
 </IfModule>
+
+# ─── طبقة ثانية لا تعتمد على mod_rewrite ───
+# الملفات النقطية لا تُخدَم إطلاقاً (PHP يقرؤها من القرص عادي)،
+# وملف الأسرار وملفات الحزم محجوبة عن الويب.
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+<Files "secrets.php">
+    Require all denied
+</Files>
+
+<FilesMatch "\.(env|sqlite|lock|log|bak|sql|yml|yaml|dist|dat)$">
+    Require all denied
+</FilesMatch>

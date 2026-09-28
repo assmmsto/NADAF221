@@ -58,7 +58,10 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            // InnoDB إلزامي على InfinityFree: خادم MariaDB هناك يأنس MyISAM
+            // الذي حد مفتاحه 1000 بايت، فيفشل varchar(255) بترميز utf8mb4
+            // (1020 بايت) بخطأ 1071. InnoDB يسمح 3072 بايت.
+            'engine' => 'InnoDB',
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
@@ -78,7 +81,10 @@ return [
             'prefix' => '',
             'prefix_indexes' => true,
             'strict' => true,
-            'engine' => null,
+            // InnoDB إلزامي على InfinityFree: خادم MariaDB هناك يأنس MyISAM
+            // الذي حد مفتاحه 1000 بايت، فيفشل varchar(255) بترميز utf8mb4
+            // (1020 بايت) بخطأ 1071. InnoDB يسمح 3072 بايت.
+            'engine' => 'InnoDB',
             'options' => extension_loaded('pdo_mysql') ? array_filter([
                 Mysql::ATTR_SSL_CA => env('MYSQL_ATTR_SSL_CA'),
             ]) : [],
