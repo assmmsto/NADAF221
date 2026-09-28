@@ -63,7 +63,7 @@
     </div>
 
     {{-- تثبيت التطبيق PWA — يظهر فقط عندما يتاح التثبيت الفعلي (كروم/إيدج) --}}
-    <div class="nad-install hidden border-t border-nad-line2/60">
+    <div class="nad-install border-t border-nad-line2/60" style="display:none">
         <div class="container-x flex items-center justify-center gap-3 py-3">
             <span class="inline-flex h-9 w-9 items-center justify-center rounded-full border border-nad-brass/50 text-nad-champ">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>

@@ -182,8 +182,10 @@
                     <span>{{ __('nav.contact') }}</span>
                 </a>
 
-                {{-- تثبيت التطبيق — يظهر فقط عندما يتاح التثبيت الفعلي (كروم/إيدج) --}}
-                <button type="button" class="nad-install hidden nad-navi !text-nad-champ">
+                {{-- تثبيت التطبيق — يظهر فقط عندما يتاح التثبيت الفعلي (كروم/إيدج).
+                    الإخفاء بـ style مباشر لا بـ class — لأن .nad-navi يعرض flex
+                    ويتغلب على صنف hidden فيتعارض مع «الأيقونة ظاهرة ولا تعمل». --}}
+                <button type="button" class="nad-navi !text-nad-champ" style="display:none">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
                     <span>تثبيت التطبيق</span>
                 </button>
@@ -219,7 +221,7 @@
                 @endauth
 
                 {{-- تثبيت التطبيق — يظهر فقط عندما يتاح التثبيت الفعلي (كروم/أندرويد) --}}
-                <button type="button" class="nad-install hidden mt-2 flex w-full items-center gap-3 border-t border-nad-line2 px-4 pt-3 pb-4 text-sm font-extrabold text-nad-champ">
+                <button type="button" class="mt-2 flex w-full items-center gap-3 border-t border-nad-line2 px-4 pt-3 pb-4 text-sm font-extrabold text-nad-champ" style="display:none">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
                     تثبيت التطبيق
                 </button>
@@ -253,12 +255,12 @@
 
             var show = function () {
                 document.querySelectorAll('.nad-install').forEach(function (el) {
-                    el.classList.remove('hidden');
+                    el.style.display = '';
                 });
             };
             var hideAll = function () {
                 document.querySelectorAll('.nad-install').forEach(function (el) {
-                    el.classList.add('hidden');
+                    el.style.display = 'none';
                 });
             };
 

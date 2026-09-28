@@ -44,3 +44,12 @@
 <FilesMatch "\.(env|sqlite|lock|log|bak|sql|yml|yaml|dist|dat)$">
     Require all denied
 </FilesMatch>
+
+# ─── MIME للمانيفست — شرط التثبيت الفعلي في كروم ───
+# بدون هذا النوع يرفض كروم المانيفست (يُخدَم text/plain) فيصير الموقع
+# «غير قابل للتثبيت»: قائمة أندرويد تعرض «إضافة اختصار» بدل «تثبيت التطبيق»
+# وbeforeinstallprompt لا يُطلق أبداً.
+<IfModule mod_mime.c>
+    AddType application/manifest+json .webmanifest
+    AddType application/manifest+json .manifest
+</IfModule>
