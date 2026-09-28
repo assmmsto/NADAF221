@@ -42,6 +42,7 @@ class Settings extends Page
             'store_name_en' => Setting::get('store_name_en'),
             'store_phone' => Setting::get('store_phone'),
             'wa_country_code' => Setting::get('wa_country_code', '963'),
+            'maps_url' => Setting::get('maps_url', ''),
             'exchange_rate' => Setting::get('exchange_rate', 15000),
             'shipping_enabled' => Setting::bool('shipping_enabled', true),
             'shipping_fee_usd' => Setting::get('shipping_fee_usd', 0),

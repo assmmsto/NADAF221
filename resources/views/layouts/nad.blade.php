@@ -181,6 +181,12 @@
                     <x-shop-icon name="phone" class="h-4 w-4" />
                     <span>{{ __('nav.contact') }}</span>
                 </a>
+
+                {{-- تثبيت التطبيق — يظهر فقط عندما يتاح التثبيت الفعلي (كروم/إيدج) --}}
+                <button type="button" class="nad-install hidden nad-navi !text-nad-champ">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-4 w-4" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                    <span>تثبيت التطبيق</span>
+                </button>
             </div>
         </nav>
 
@@ -211,6 +217,12 @@
                         <button class="w-full px-4 py-2.5 text-start text-sm font-bold text-red-300 hover:bg-nad-surface">{{ __('nav.logout') }}</button>
                     </form>
                 @endauth
+
+                {{-- تثبيت التطبيق — يظهر فقط عندما يتاح التثبيت الفعلي (كروم/أندرويد) --}}
+                <button type="button" class="nad-install hidden mt-2 flex w-full items-center gap-3 border-t border-nad-line2 px-4 pt-3 pb-4 text-sm font-extrabold text-nad-champ">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" class="h-5 w-5" aria-hidden="true"><path d="M12 3v11m0 0 4-4m-4 4-4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+                    تثبيت التطبيق
+                </button>
             </nav>
         </div>
     </header>
@@ -229,46 +241,43 @@
     {{-- الشات العائم بنمط nad --}}
     <livewire:floating-chat />
 
-    {{-- زر تثبيت التطبيق PWA — ظاهر دائماً؛ النقر يُطلق تثبيت المتصفح
-         أو يعرض خطوات التثبيت اليدوي (آيفون/متصفحات بلا beforeinstallprompt) --}}
-    <button id="nad-pwa-install" class="fixed z-[90] flex items-center gap-2 rounded-full border border-nad-brass/60 bg-nad-surface px-4 py-2.5 text-xs font-extrabold text-nad-champ shadow-2xl"
-            style="bottom: 96px; inset-inline-start: 18px;">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-4 w-4" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16"/></svg>
-        {{ __('nav.home') === 'الرئيسية' ? 'تثبيت التطبيق' : 'Install app' }}
-    </button>
+    {{-- ═══ محرّك تثبيت PWA ═══
+         لا أزرار ثابتة — ثلاثة مواضع تظهر معاً **فقط عندما يتاح التثبيت الفعلي**
+         (حدث beforeinstallprompt في كروم/إيدج — حاسوب وأندرويد):
+         1) الهيدر بجانب «اتصل بنا»  2) قائمة الجوال المنسدلة  3) التذييل فوق المطوّر.
+         النقر على أي منها = نافذة تثبيت المتصفح الحقيقية. آيفون لا يسمح إطلاقاً
+         بتثبيت برمجي فلا يظهر الزر هناك أصلاً. --}}
     <script>
         (function () {
             var deferred = null;
-            var btn = function () { return document.getElementById('nad-pwa-install'); };
+
+            var show = function () {
+                document.querySelectorAll('.nad-install').forEach(function (el) {
+                    el.classList.remove('hidden');
+                });
+            };
+            var hideAll = function () {
+                document.querySelectorAll('.nad-install').forEach(function (el) {
+                    el.classList.add('hidden');
+                });
+            };
+
             window.addEventListener('beforeinstallprompt', function (e) {
                 e.preventDefault();
                 deferred = e;
+                show();
             });
-            window.addEventListener('appinstalled', function () {
-                var b = btn();
-                if (b) { b.classList.add('hidden'); b.classList.remove('flex'); }
-            });
+            window.addEventListener('appinstalled', hideAll);
+
             document.addEventListener('click', function (e) {
-                var b = e.target && e.target.closest && e.target.closest('#nad-pwa-install');
-                if (!b) return;
+                var b = e.target && e.target.closest && e.target.closest('.nad-install');
+                if (!b || !deferred) return;
 
-                if (deferred) {
-                    deferred.prompt();
-                    deferred.userChoice.finally(function () {
-                        deferred = null;
-                        var x = btn();
-                        if (x) { x.classList.add('hidden'); x.classList.remove('flex'); }
-                    });
-
-                    return;
-                }
-
-                // بلا beforeinstallprompt (آيفون/سفاري): خطوات التثبيت اليدوي
-                var ios = /iphone|ipad|ipod/i.test(navigator.userAgent);
-                var msg = ios
-                    ? 'لتثبيت التطبيق على آيفون: اضغط زر المشاركة ثم «إضافة إلى الشاشة الرئيسية».'
-                    : 'لتثبيت التطبيق: افتح قائمة المتصفح ثم اختر «تثبيت التطبيق» أو «إضافة إلى الشاشة الرئيسية».';
-                alert(msg);
+                deferred.prompt();
+                deferred.userChoice.finally(function () {
+                    deferred = null;
+                    hideAll();
+                });
             });
         })();
     </script>
