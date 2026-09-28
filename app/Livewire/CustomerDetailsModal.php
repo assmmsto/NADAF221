@@ -94,7 +94,7 @@ class CustomerDetailsModal extends Component
         $message = $this->message($customer);
 
         if ($this->target === 'cart') {
-            Illuminate\Support\Facades\Session::forget(\App\Services\CartService::SESSION_KEY);
+            \Illuminate\Support\Facades\Session::forget(\App\Services\CartService::SESSION_KEY);
         }
 
         $this->open = false;
