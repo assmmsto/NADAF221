@@ -89,9 +89,17 @@ class CustomerDetailsModal extends Component
 
         session(['customer_details' => $customer + ['city' => $this->city]]);
 
+        // تفريغ السلة بعد إرسال واتساب — بطلب المالك: كانت تبقى قديمة فتختلط
+        // بالجديدة في الرسالة التالية. الوجهة product لا تمسّ السلة.
+        $message = $this->message($customer);
+
+        if ($this->target === 'cart') {
+            Illuminate\Support\Facades\Session::forget(\App\Services\CartService::SESSION_KEY);
+        }
+
         $this->open = false;
 
-        $this->redirect(whatsapp_inquiry_link($this->message($customer)), navigate: false);
+        $this->redirect(whatsapp_inquiry_link($message), navigate: false);
     }
 
     /** الرسالة بحسب الوجهة — والصيغة نفسها في الحالتين */

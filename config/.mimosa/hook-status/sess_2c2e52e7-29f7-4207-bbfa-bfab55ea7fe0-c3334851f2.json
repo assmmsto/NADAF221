@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "mimosa-hook-status/v1",
+  "recordedAt": "2026-09-28T09:40:16.382Z",
+  "sessionId": "sess_2c2e52e7-29f7-4207-bbfa-bfab55ea7fe0",
+  "event": "PostToolUse",
+  "toolName": "Edit",
+  "file": "A:\\nadaf\\deploy-setup.php",
+  "outcome": "inconclusive",
+  "coverage": "partial",
+  "findingCount": 0,
+  "durationMs": 20,
+  "hostState": "hook_complete",
+  "reportHint": ".mimosa/reports/"
+}

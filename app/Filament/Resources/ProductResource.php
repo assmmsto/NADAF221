@@ -246,8 +246,9 @@ class ProductResource extends Resource
                         ->columns(6)
                         ->defaultItems(1)
                         ->minItems(1)
-                        // قطعة واحدة = صف واحد لا يُضاف ولا يُحذف
-                        ->maxItems(fn (Forms\Get $get) => $get('product_type') === Product::TYPE_SINGLE ? 1 : null)
+                        // بلا حدّ أعلى للصفوف: النوع يتطابق تلقائياً في صفحات
+                        // الإنشاء/التعديل (عدة صفوف ⇒ عدة ألوان أو مقاسات)،
+                        // فلا يُرفض حفظ منتج بألوان متعددة بخطأ maxItems.
                         ->addable(fn (Forms\Get $get) => $get('product_type') !== Product::TYPE_SINGLE)
                         ->deletable(fn (Forms\Get $get) => $get('product_type') !== Product::TYPE_SINGLE)
                         ->reorderable(false)

@@ -62,8 +62,18 @@
             </button>
         </div>
     @else
-        <button disabled class="btn w-full cursor-not-allowed border border-nad-line2 bg-nad-surface2 text-nad-dim">
-            {{ __('product.out_of_stock') }}
-        </button>
+        {{-- نفدت الكمية: إشعار + بديل ذكي — طلب المنتج عبر واتساب برسالة جاهزة --}}
+        <div class="space-y-2">
+            <button disabled class="btn w-full cursor-not-allowed border border-nad-line2 bg-nad-surface2 text-nad-dim">
+                {{ __('product.out_of_stock') }}
+            </button>
+            <a href="{{ whatsapp_inquiry_link("مرحباً، أرغب بطلب هذا المنتج غير المتوفر حالياً:\nالاسم: {$product->name_ar}\nالكود: {$product->internal_code}\nالرابط: ".url()->current()) }}"
+               target="_blank" rel="noopener"
+               class="btn-outline flex w-full items-center justify-center gap-2 !border-[#25D366]/60 !text-[#25D366] hover:!bg-[#25D366]/10">
+                <x-shop-icon name="whatsapp" class="h-4 w-4" />
+                اطلب هذا المنتج عبر واتساب
+            </a>
+            <p class="text-center text-[11px] text-nad-dim">نفدت الكمية — اطلبه الآن ونعيد توفيره لك بأسرع وقت</p>
+        </div>
     @endif
 </div>

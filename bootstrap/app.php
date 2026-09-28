@@ -6,7 +6,7 @@ use Illuminate\Foundation\Configuration\Middleware;
 use Illuminate\Http\Exceptions\PostTooLargeException;
 use Illuminate\Http\Request;
 
-return Application::configure(basePath: dirname(__DIR__))
+$app = Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         commands: __DIR__.'/../routes/console.php',
@@ -71,3 +71,5 @@ return Application::configure(basePath: dirname(__DIR__))
 // وأصول Vite وقرص الملفات العامة تشير إلى الجذر ⇒ 404 لكل صورة وخط وجافاسكربت.
 // عطل بصري صامت بلا رسالة خطأ واحدة.
 $app->usePublicPath($app->basePath());
+
+return $app;

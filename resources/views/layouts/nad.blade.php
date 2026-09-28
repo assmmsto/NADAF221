@@ -50,10 +50,13 @@
 
     @include('partials.flash')
 
-    {{-- الشريط العلوي بنمط nad — كحلي فحمي بخط شامبانيا رفيع --}}
-    <header class="sticky top-0 z-50" style="background:rgba(15,19,25,.87);backdrop-filter:blur(12px);border-bottom:1px solid rgba(210,162,78,.16)">
+    {{-- ═══ الترويسة ═══
+         x-data على الترويسة نفسها — لأن زر الهمبرغر ولوحة قائمة الجوال
+         **شقيقات** لا يربطهما نطاق Alpine لو كان على الزر وحده (هذا كان
+         سبب «القائمة لا تعمل» على الجوال). --}}
+    <header x-data="{ open: false }" class="sticky top-0 z-50" style="background:rgba(15,19,25,.87);backdrop-filter:blur(12px);border-bottom:1px solid rgba(210,162,78,.16)">
         <div class="container-x flex h-[58px] items-center gap-3">
-            <button x-data="{ open: false }" @click="open = !open"
+            <button @click="open = !open"
                     class="rounded-lg p-2 text-nad-ivory/80 hover:text-nad-champ lg:hidden" aria-label="{{ __('nav.menu') }}">
                 <x-shop-icon name="menu" class="h-6 w-6" />
             </button>
@@ -110,31 +113,25 @@
                     <livewire:header-cart />
                 @endif
 
-                @auth
-                    <div x-data="{ open: false }" class="relative">
-                        <button class="flex items-center gap-2 rounded-full border border-nad-line px-3 py-2 text-sm font-bold text-nad-champ transition hover:border-nad-brass" @click="open = !open">
-                            <x-shop-icon name="user" class="h-4 w-4" />
-                            <span class="hidden lg:block">{{ auth()->user()->name }}</span>
-                        </button>
-                        <div x-show="open" @click.outside="open = false" x-cloak x-transition
-                             class="absolute end-0 top-full mt-2 w-48 overflow-hidden rounded-xl border border-nad-line2 bg-nad-surface py-1 shadow-2xl">
-                            <a href="{{ route('account.profile') }}" class="block px-4 py-2.5 text-sm text-nad-ivory/90 hover:bg-nad-surface2">{{ __('account.profile') }}</a>
-                            <a href="{{ route('account.orders') }}" class="block px-4 py-2.5 text-sm text-nad-ivory/90 hover:bg-nad-surface2">{{ __('account.my_orders') }}</a>
-                            @if(auth()->user()->isAdmin())
-                                <a href="{{ url('/admin') }}" class="block px-4 py-2.5 text-sm font-bold text-nad-brass hover:bg-nad-surface2">{{ __('nav.account') }} (Admin)</a>
-                            @endif
-                            <div class="my-1 border-t border-nad-line2"></div>
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-                                <button class="w-full px-4 py-2.5 text-start text-sm font-bold text-red-300 hover:bg-nad-surface2">{{ __('nav.logout') }}</button>
-                            </form>
-                        </div>
+                {{-- أيقونة البحث على الجوال — تفتح حقل البحث عند النقر --}}
+                <div x-data="{ searchOpen: false }" class="relative md:hidden">
+                    <button type="button"
+                            class="rounded-lg p-2 text-nad-ivory/80 hover:text-nad-champ"
+                            aria-label="{{ __('nav.search_placeholder') }}"
+                            @click="searchOpen = !searchOpen">
+                        <x-shop-icon name="search" class="h-5 w-5" />
+                    </button>
+                    <div x-show="searchOpen" x-cloak x-transition
+                         class="absolute end-0 top-full z-[70] mt-3 w-[300px] max-w-[86vw] rounded-xl border border-nad-line2 bg-nad-surface p-2 shadow-2xl">
+                        <form action="{{ route('search') }}" method="GET" class="nad-search !flex">
+                            <input type="search" name="q" value="{{ request('q') }}" placeholder="{{ __('nav.search_placeholder') }}" autofocus>
+                            <x-shop-icon name="search" class="pointer-events-none h-4 w-4 text-nad-dim" />
+                        </form>
                     </div>
-                @endauth
-                @guest
-                    <a href="{{ route('login') }}" class="nad-btn-ghost !px-4 !py-2 !text-xs">{{ __('nav.login') }}</a>
-                    <a href="{{ route('register') }}" class="nad-btn-brass !px-4 !py-2 !text-xs hidden sm:inline-flex">{{ __('nav.register') }}</a>
-                @endguest
+                </div>
+
+                {{-- تسجيل الدخول/إنشاء حساب مخفيان من واجهة المتجر بطلب المالك —
+                    الدخول للأدمن عبر /admin حصراً --}}
             </div>
         </div>
 
@@ -220,12 +217,6 @@
                         <button class="w-full px-4 py-2.5 text-start text-sm font-bold text-red-300 hover:bg-nad-surface">{{ __('nav.logout') }}</button>
                     </form>
                 @endauth
-                @guest
-                    <div class="flex gap-2 px-4 pt-2">
-                        <a href="{{ route('login') }}" class="nad-btn-ghost flex-1">{{ __('nav.login') }}</a>
-                        <a href="{{ route('register') }}" class="nad-btn-brass flex-1">{{ __('nav.register') }}</a>
-                    </div>
-                @endguest
             </nav>
         </div>
     </header>
@@ -243,6 +234,40 @@
 
     {{-- الشات العائم بنمط nad --}}
     <livewire:floating-chat />
+
+    {{-- زر تثبيت التطبيق PWA — يظهر فقط عندما يسمح المتصفح بالتثبيت --}}
+    <button id="nad-pwa-install" class="hidden fixed z-[90] items-center gap-2 rounded-full border border-nad-brass/60 bg-nad-surface px-4 py-2.5 text-xs font-extrabold text-nad-champ shadow-2xl"
+            style="bottom: 96px; inset-inline-start: 18px;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" class="h-4 w-4" aria-hidden="true"><path d="M12 3v12m0 0 4-4m-4 4-4-4M4 19h16"/></svg>
+        {{ __('nav.home') === 'الرئيسية' ? 'تثبيت التطبيق' : 'Install app' }}
+    </button>
+    <script>
+        (function () {
+            var deferred = null;
+            var btn = function () { return document.getElementById('nad-pwa-install'); };
+            window.addEventListener('beforeinstallprompt', function (e) {
+                e.preventDefault();
+                deferred = e;
+                var b = btn();
+                if (b) { b.classList.remove('hidden'); b.classList.add('flex'); }
+            });
+            window.addEventListener('appinstalled', function () {
+                var b = btn();
+                if (b) { b.classList.add('hidden'); b.classList.remove('flex'); }
+            });
+            document.addEventListener('click', function (e) {
+                var b = e.target && e.target.closest && e.target.closest('#nad-pwa-install');
+                if (b && deferred) {
+                    deferred.prompt();
+                    deferred.userChoice.finally(function () {
+                        var x = btn();
+                        if (x) { x.classList.add('hidden'); x.classList.remove('flex'); }
+                    });
+                    deferred = null;
+                }
+            });
+        })();
+    </script>
 
     {{-- تنبيه انقطاع الإنترنت --}}
     <div x-data="{ online: navigator.onLine }"

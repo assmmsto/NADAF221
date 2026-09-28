@@ -65,7 +65,7 @@
     {{-- بيانات المطوّر — أزرق شفاف أسفل الموقع، بلون هادئ لا ينافس محتوى المتجر --}}
     <div class="border-t" style="border-color: rgba(96,165,250,.16)">
         <div class="container-x flex items-center justify-center gap-4 py-4 text-xs">
-            <span class="font-bold tracking-[.14em]" style="color: rgba(96,165,250,.85)">ASSM MSSTO</span>
+            <span class="font-bold tracking-[.14em]" style="color: rgba(96,165,250,.85)">المطوّر: ASSM MSSTO</span>
 
             {{-- أيقونات فقط — بلا رقم ولا بريد مكتوبين على الشاشة.
                  والرقم والبريد يبقيان في الوسم وحدهما (aria-label وtitle)
