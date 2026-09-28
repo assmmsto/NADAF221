@@ -34,6 +34,8 @@
     <meta property="og:image" content="@yield('og_image', url('icons/icon-512.png'))">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="theme-color" content="#0F1319">
+    {{-- منع التمرير الأفقي على الجوال — السلايدر/الفيديو أثناء التحميل يدفع الصفحة عرضاً --}}
+    <style>html, body { overflow-x: clip; }</style>
     <link rel="manifest" href="{{ asset('manifest.webmanifest') }}">
     <link rel="icon" href="{{ asset('favicon.svg') }}" type="image/svg+xml">
 
@@ -96,8 +98,8 @@
                     <svg class="i-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" aria-hidden="true"><path d="M20 14.2A8.2 8.2 0 0 1 9.8 4 8.4 8.4 0 1 0 20 14.2z"/></svg>
                 </button>
 
-                {{-- مبدّل العملة بنمط مقسّم حاد --}}
-                <div class="hidden border border-nad-line2 sm:flex">
+                {{-- مبدّل العملة — مخفي بطلب المالك (كان بجانب حقل البحث) --}}
+                <div class="hidden">
                     <a href="{{ route('currency.switch', 'usd') }}"
                        class="px-3 py-1.5 text-[10.5px] font-bold tracking-widest transition {{ session('currency', 'usd') === 'usd' ? 'bg-nad-bg text-nad-champ' : 'text-nad-mut' }}">USD $</a>
                     <a href="{{ route('currency.switch', 'syp') }}"
@@ -136,12 +138,9 @@
             </div>
         </div>
 
-        {{-- ═══ شريط التنقّل ═══
-             كان **غائبًا على الحاسوب تمامًا**: الرئيسية والأقسام وصفحات مثل
-             «سياسة الاستبدال والإرجاع» و«الأسئلة الشائعة» كانت في قائمة الجوال
-             وحدها (`lg:hidden`)، فلا سبيل لبلوغها من الحاسوب إلا بالبحث.
-             وهذا الشريط يُظهرها بأيقونات، ويمرّ أفقيًّا على الجوال. --}}
-        <nav class="border-t border-nad-line2/70" aria-label="{{ __('nav.menu') }}">
+        {{-- ═══ شريط التنقّل — للشاشات الكبيرة فقط؛ الموبايل يستخدم قائمة همبرغر ═══ --}}
+
+        <nav class="hidden border-t border-nad-line2/70 lg:block" aria-label="{{ __('nav.menu') }}">
             <div class="container-x nad-navrow">
                 @php
                     // أيقونة كل صفحة بحسب معناها لا بحسب ترتيبها

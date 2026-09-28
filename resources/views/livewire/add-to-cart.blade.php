@@ -50,19 +50,12 @@
                 <x-shop-icon name="bag" class="h-4 w-4" />
                 {{ __('product.add_to_cart') }}
             </button>
-            <button wire:click="add(true)" wire:loading.attr="disabled" class="btn-primary flex-1">
-                {{ __('product.buy_now') }}
-            </button>
 
-            {{-- إتمام الطلب + إرسال واتساب — بجانب «الشراء الآن».
-                 يفتح النافذة الإلزامية لبيانات العميل ثم يرسل تفاصيل المنتج. --}}
+            {{-- إتمام الطلب + إرسال واتساب — يرسل **كل محتويات السلة** (وليس المنتج
+                 الواحد) بنفس وظيفة زر صفحة السلة: target=cart يوجّه المودال إلى
+                 OrderWhatsapp::forCart — بينما «استفسار عن المنتج» يبقى للمنتج الواحد. --}}
             <button type="button"
-                    x-on:click="$dispatch('open-customer-details', {
-                        target: 'product',
-                        productId: {{ $product->id }},
-                        variantId: {{ $this->variant?->id ?? 'null' }},
-                        quantity: {{ $qty }}
-                    })"
+                    x-on:click="$dispatch('open-customer-details', { target: 'cart' })"
                     class="btn-outline flex-1 !border-[#25D366]/60 !text-[#25D366] hover:!bg-[#25D366]/10">
                 <x-shop-icon name="whatsapp" class="h-4 w-4" />
                 {{ __('checkout.confirm_with_whatsapp') }}
