@@ -73,7 +73,7 @@ class PageResource extends Resource
                                 ->maxSize(4096)
                                 ->columnSpanFull(),
                             Forms\Components\FileUpload::make('videos')
-                                ->label('فيديوهات (كل واحدة ≤ 10 ثوانٍ)')
+                                ->label('فيديوهات (كل واحدة ≤ 60 ثانية)')
                                 ->disk('public')
                                 ->directory('pages')
                                 ->acceptedFileTypes(['video/mp4', 'video/webm', 'video/quicktime'])
@@ -92,8 +92,8 @@ class PageResource extends Resource
                                             return;
                                         }
                                         $fullPath = \Illuminate\Support\Facades\Storage::disk('public')->path($value);
-                                        if (is_file($fullPath) && media_duration($fullPath) > 10.5) {
-                                            $fail('مدة الفيديو يجب أن تكون 10 ثوانٍ أو أقل.');
+                                        if (is_file($fullPath) && media_duration($fullPath) > 60.5) {
+                                            $fail('مدة الفيديو يجب أن تكون 60 ثانية أو أقل (اضغطه إن كان أطول).');
                                         }
                                     };
                                 }),
