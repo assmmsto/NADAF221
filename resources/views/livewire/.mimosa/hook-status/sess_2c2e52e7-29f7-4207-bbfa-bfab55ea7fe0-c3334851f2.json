@@ -1,0 +1,14 @@
+{
+  "schemaVersion": "mimosa-hook-status/v1",
+  "recordedAt": "2026-09-29T02:16:20.660Z",
+  "sessionId": "sess_2c2e52e7-29f7-4207-bbfa-bfab55ea7fe0",
+  "event": "PostToolUse",
+  "toolName": "Edit",
+  "file": "cart-table.blade.php",
+  "outcome": "clear",
+  "coverage": "complete",
+  "findingCount": 0,
+  "durationMs": 25,
+  "hostState": "hook_complete",
+  "reportHint": ".mimosa/reports/"
+}

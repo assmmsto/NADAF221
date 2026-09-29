@@ -242,33 +242,36 @@
                     <div><span>{{ __('order.address') }}</span><b>{{ trim(($city ? $city.' — ' : '').$address) ?: '—' }}</b></div>
                 </div>
 
-                <div class="nad-sumitems">
-                    @foreach ($totals['items'] as $item)
-                        <div>
-                            <span>{{ $item->product->name }} @if($item->variant_label) · {{ $item->variant_label }} @endif · ×{{ $item->qty }}</span>
-                            <b>{{ fmt_usd($item->line_usd) }}</b>
-                        </div>
-                    @endforeach
-                </div>
-
-                <div class="nad-acct !border-nad-line2 !bg-transparent">
-                    <div><span>{{ __('cart.subtotal') }}</span><b>{{ fmt_usd($totals['subtotal_usd']) }}</b></div>
-                    @if ($totals['discount_usd'] > 0)
-                        <div><span>{{ __('cart.coupon_discount') }}</span><b style="color:#7FD3A2">-{{ fmt_usd($totals['discount_usd']) }}</b></div>
-                    @endif
-                    @if ($shipping_method === 'local')
-                        <div><span>{{ __('cart.shipping') }}</span><b>{{ $totals['shipping_usd'] > 0 ? fmt_usd($totals['shipping_usd']) : __('checkout.free') }}</b></div>
-                    @endif
-                </div>
-
-                <div class="nad-acct !bg-nad-brass/10" style="border-color:var(--brass,#D2A24E)">
-                    <div class="!items-baseline">
-                        <span class="!text-nad-ivory font-extrabold">{{ __('checkout.total_label') }}
-                            <small class="block text-[10.5px] text-nad-dim font-normal">{{ fmt_syp($totals['total_syp']) }}</small>
-                        </span>
-                        <b class="font-display !text-2xl text-nad-champ">{{ fmt_usd($totals['total_usd']) }}</b>
+                {{-- الأسعار تُخفى في وضع إخفاء الأسعار الكامل — عناصر الطلب تبقى بلا أرقام --}}
+                @unless (hide_all_prices())
+                    <div class="nad-sumitems">
+                        @foreach ($totals['items'] as $item)
+                            <div>
+                                <span>{{ $item->product->name }} @if($item->variant_label) · {{ $item->variant_label }} @endif · ×{{ $item->qty }}</span>
+                                <b>{{ fmt_usd($item->line_usd) }}</b>
+                            </div>
+                        @endforeach
                     </div>
-                </div>
+
+                    <div class="nad-acct !border-nad-line2 !bg-transparent">
+                        <div><span>{{ __('cart.subtotal') }}</span><b>{{ fmt_usd($totals['subtotal_usd']) }}</b></div>
+                        @if ($totals['discount_usd'] > 0)
+                            <div><span>{{ __('cart.coupon_discount') }}</span><b style="color:#7FD3A2">-{{ fmt_usd($totals['discount_usd']) }}</b></div>
+                        @endif
+                        @if ($shipping_method === 'local')
+                            <div><span>{{ __('cart.shipping') }}</span><b>{{ $totals['shipping_usd'] > 0 ? fmt_usd($totals['shipping_usd']) : __('checkout.free') }}</b></div>
+                        @endif
+                    </div>
+
+                    <div class="nad-acct !bg-nad-brass/10" style="border-color:var(--brass,#D2A24E)">
+                        <div class="!items-baseline">
+                            <span class="!text-nad-ivory font-extrabold">{{ __('checkout.total_label') }}
+                                <small class="block text-[10.5px] text-nad-dim font-normal">{{ fmt_syp($totals['total_syp']) }}</small>
+                            </span>
+                            <b class="font-display !text-2xl text-nad-champ">{{ fmt_usd($totals['total_usd']) }}</b>
+                        </div>
+                    </div>
+                @endunless
 
                 <button type="button" wire:click="confirm" wire:loading.attr="disabled" class="nad-btn-brass w-full !mt-4">
                     <span wire:loading.remove wire:target="confirm">{{ __('checkout.confirm_payment') }}</span>

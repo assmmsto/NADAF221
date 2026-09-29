@@ -29,9 +29,7 @@
                             @if ($item->variant_label)
                                 <p class="mt-0.5 text-xs text-nad-mut">{{ $item->variant_label }}</p>
                             @endif
-                            <p class="nad-price mt-1 !text-base">
-                                {{ fmt_price($item->unit_usd, $item->unit_syp) }}
-                            </p>
+                        </div>
                             @if ($item->is_wholesale)
                                 <span class="nad-chip nad-chip-br mt-1">{{ __('cart.wholesale_applied') }}</span>
                             @endif
@@ -41,7 +39,11 @@
                             <input type="number" min="1" class="nad-search !w-20 !px-2 !py-1.5 text-center"
                                    wire:model.live.debounce.400ms="qty.{{ $item->key }}">
                             <div class="flex items-center gap-3">
-                                <span class="font-extrabold text-nad-champ">{{ fmt_usd($item->line_usd) }}</span>
+                                @unless (inquiry_mode())
+                                    @unless (hide_all_prices())
+                                    <span class="font-extrabold text-nad-champ">{{ fmt_usd($item->line_usd) }}</span>
+                                @endunless
+                                @endunless
                                 <button wire:click="remove('{{ $item->key }}')" wire:loading.attr="disabled"
                                         class="rounded p-1.5 text-nad-ox hover:bg-nad-ox/20 hover:text-red-300"
                                         title="{{ __('cart.remove') }}">
@@ -57,23 +59,25 @@
             <div class="lg:w-80 lg:shrink-0">
                 <div class="nad-ocard sticky top-24 space-y-3 !p-5 text-sm">
                     <h3 class="font-display mb-2 text-lg text-nad-champ">{{ __('cart.summary') }}</h3>
-                    <div class="flex justify-between text-nad-mut">
-                        <span>{{ __('cart.subtotal') }}</span>
-                        <span class="font-bold text-nad-ivory">{{ fmt_usd($totals['subtotal_usd']) }}</span>
-                    </div>
-                    <div class="flex justify-between text-xs text-nad-dim">
-                        <span></span>
-                        <span>{{ fmt_syp($totals['total_syp']) }}</span>
-                    </div>
-
-                    <div class="border-t border-nad-line2 pt-3">
-                        <div class="flex justify-between text-base">
-                            <span class="font-extrabold text-nad-ivory">{{ __('cart.grand_total') }}</span>
-                            <span class="nad-price !text-xl">{{ fmt_usd($totals['total_usd']) }}</span>
+                    @unless (hide_all_prices())
+                        <div class="flex justify-between text-nad-mut">
+                            <span>{{ __('cart.subtotal') }}</span>
+                            <span class="font-bold text-nad-ivory">{{ fmt_usd($totals['subtotal_usd']) }}</span>
                         </div>
-                        <p class="mt-1 text-end text-xs text-nad-mut">{{ fmt_syp($totals['total_syp']) }}</p>
-                        <p class="mt-0.5 text-[11px] text-nad-dim">{{ __('cart.shipping') }}: {{ __('cart.calculated_at_checkout') }}</p>
-                    </div>
+                        <div class="flex justify-between text-xs text-nad-dim">
+                            <span></span>
+                            <span>{{ fmt_syp($totals['total_syp']) }}</span>
+                        </div>
+
+                        <div class="border-t border-nad-line2 pt-3">
+                            <div class="flex justify-between text-base">
+                                <span class="font-extrabold text-nad-ivory">{{ __('cart.grand_total') }}</span>
+                                <span class="nad-price !text-xl">{{ fmt_usd($totals['total_usd']) }}</span>
+                            </div>
+                            <p class="mt-1 text-end text-xs text-nad-mut">{{ fmt_syp($totals['total_syp']) }}</p>
+                        </div>
+                    @endunless
+                    <p class="text-center text-[11px] text-nad-dim">{{ __('cart.shipping') }}: {{ __('cart.calculated_at_checkout') }}</p>
 
                     {{-- إتمام الطلب متاح للجميع: كان الزائر غير المسجَّل يُحوَّل إلى
                          `/login` فيُشترط عليه حساب — وهو ما مُنع صراحةً. --}}

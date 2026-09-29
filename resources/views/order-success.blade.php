@@ -34,16 +34,18 @@
                 تُرسل الرسالة بتفاصيل الطلب كاملة — كل منتج في مقطع منفصل.
             </p>
 
-            {{-- ملخص الإجماليات $/ل.س --}}
-            <div class="nad-ocard mx-auto mt-6 max-w-sm p-5">
-                <div class="flex items-center justify-between gap-3 text-sm text-nad-mut">
-                    <span>{{ __('cart.grand_total') }}</span>
-                    <b class="nad-price">{{ fmt_usd($order->total_usd) }}</b>
+            {{-- ملخص الإجماليات — يُخفى في وضع إخفاء الأسعار الكامل --}}
+            @unless (hide_all_prices())
+                <div class="nad-ocard mx-auto mt-6 max-w-sm p-5">
+                    <div class="flex items-center justify-between gap-3 text-sm text-nad-mut">
+                        <span>{{ __('cart.grand_total') }}</span>
+                        <b class="nad-price">{{ fmt_usd($order->total_usd) }}</b>
+                    </div>
+                    <div class="mt-1 flex items-center justify-end text-xs text-nad-dim" dir="ltr">
+                        <span>{{ fmt_syp($order->total_syp) }}</span>
+                    </div>
                 </div>
-                <div class="mt-1 flex items-center justify-end text-xs text-nad-dim" dir="ltr">
-                    <span>{{ fmt_syp($order->total_syp) }}</span>
-                </div>
-            </div>
+            @endunless
 
             {{-- أزرار: تتبع طلبي + متابعة التسوق --}}
             <div class="mt-7 flex flex-wrap items-center justify-center gap-3">

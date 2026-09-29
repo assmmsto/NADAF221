@@ -82,23 +82,23 @@ if (! function_exists('status_badge_class')) {
 }
 
 if (! function_exists('inquiry_mode')) {
-    /** وضع الاستفسار — إخفاء كامل للأسعار واستبدالها بوسائل تواصل */
+    /**
+     * وضع الاستفسار — أزرار واتساب الكبيرة. يُفعَّل فقط باختيار صريح لوضع
+     * «واتساب» في الإعدادات. مفصول عن hide_prices: الإخفاء الصرف لا يضيف
+     * أزرار واتساب (طلب المالك — إخفاء وبس).
+     */
     function inquiry_mode(): bool
     {
-        return Setting::bool('hide_prices') || Setting::get('price_display_mode') === 'whatsapp';
+        return price_mode() === 'whatsapp';
     }
 }
 
 if (! function_exists('price_mode')) {
     /**
-     * وضع عرض الأسعار: both | second_big | normal_big | whatsapp
+     * وضع عرض الأسعار: both | second_big | normal_big | whatsapp | none
      */
     function price_mode(): string
     {
-        if (Setting::bool('hide_prices')) {
-            return 'whatsapp';
-        }
-
         return Setting::get('price_display_mode', 'both');
     }
 
@@ -114,10 +114,10 @@ if (! function_exists('price_mode')) {
         return in_array(price_mode(), ['both', 'second_big'], true);
     }
 
-    /** إخفاء كل الأسعار نهائيًا بلا بديل (وضع none) */
+    /** إخفاء كل الأسعار نهائيًا بلا بديل — وضع none أو مفتاح hide_prices (إخفاء صرف بلا أزرار) */
     function hide_all_prices(): bool
     {
-        return price_mode() === 'none';
+        return price_mode() === 'none' || Setting::bool('hide_prices');
     }
 }
 
