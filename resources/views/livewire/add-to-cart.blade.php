@@ -28,7 +28,10 @@
     <div class="flex items-center gap-3">
         <div>
             <label class="label">{{ __('product.quantity') }}</label>
-            <input type="number" wire:model.live="qty" min="1" max="{{ max(1, $maxQty) }}" class="input !w-24 text-center">
+            {{-- المزامنة عند مغادرة الحقل لا أثناء الكتابة: على الجوال كانت
+                 إعادة الرسم أثناء الكتابة تُرجع القيمة إلى 1 وتحذف ما كتبه --}}
+            <input type="number" inputmode="numeric" min="1" max="{{ max(1, $maxQty) }}"
+                   wire:model.blur="qty" class="input !w-24 text-center">
         </div>
 
         <div class="pb-1 pt-6">

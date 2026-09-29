@@ -627,22 +627,19 @@ html[data-theme='light'] .nad-theme .i-sun{display:none}
 .nad-sl-meta{position:absolute;inset-block-start:clamp(14px,1.8vw,22px);inset-inline-end:clamp(14px,1.8vw,22px);z-index:3;
   font-family:ui-monospace,monospace;font-size:11px;letter-spacing:.08em;color:var(--n-mut);direction:ltr;
   background:var(--n-scrim);backdrop-filter:blur(6px);padding:4px 10px;border-radius:999px}
-/* زر الصوت — حلّ محلّ شارة التشغيل الوهمية التي كانت تُوحي بنقرة لا تفعل شيئًا.
-   الفيديو يعمل تلقائيًا أصلًا، فالنقرة هنا تُسمع صوته. والنبض يستمر ما دام
-   صامتًا ليجذب النقرة، ويسكن عند التشغيل. */
+/* زر الصوت — شفاف بلا خلفية ولا إطار ولا نبض ذهبي: لا شيء يشوّه الفيديو.
+   يظهر بشفافية خافتة، ويزداد وضوحًا قليلًا عند التحويم فقط. */
 .nad-sl-sound{position:absolute;inset-block-start:50%;inset-inline-start:50%;transform:translate(50%,-50%);z-index:4;
-  width:68px;height:68px;border-radius:50%;display:grid;place-items:center;color:var(--n-ivory);cursor:pointer;
-  background:var(--n-scrim);backdrop-filter:blur(6px);border:1px solid color-mix(in srgb,var(--n-ivory) 28%,transparent);transition:.2s}
-.nad-sl-sound:hover{background:var(--n-brass);color:var(--n-ink);border-color:var(--n-brass)}
-.nad-sl-sound svg{width:26px;height:26px}
+  width:52px;height:52px;border-radius:50%;display:grid;place-items:center;color:rgba(255,255,255,.45);cursor:pointer;
+  background:transparent;border:none;backdrop-filter:none;transition:opacity .25s;opacity:.35}
+.nad-sl-sound:hover,.nad-sl-sound:focus-visible{opacity:.85}
+.nad-sl-sound svg{width:22px;height:22px}
 .nad-sl-sound .nad-snd-on{display:none}
-.nad-sl-sound.on{background:var(--n-brass);color:var(--n-ink);border-color:var(--n-brass)}
+.nad-sl-sound.on{color:rgba(255,255,255,.45);background:transparent;border:none}
 .nad-sl-sound.on .nad-snd-on{display:block}
 .nad-sl-sound.on .nad-snd-off{display:none}
-.nad-sl-sound::after{content:'';position:absolute;inset:-8px;border-radius:50%;pointer-events:none;
-  border:1px solid color-mix(in srgb,var(--n-ivory) 22%,transparent);animation:nad-ring 2.4s ease-out infinite}
-.nad-sl-sound.on::after{animation:none;opacity:0}
-@keyframes nad-ring{0%{transform:scale(.9);opacity:.9}100%{transform:scale(1.35);opacity:0}}
+.nad-sl-sound::after{content:'';position:absolute;inset:-8px;border-radius:50%;pointer-events:none;display:none}
+.nad-sl-sound.on::after{display:none}
 .nad-sl-nav{position:absolute;inset-block-end:clamp(16px,2.4vw,32px);inset-inline-end:clamp(16px,2.4vw,32px);z-index:4;
   display:flex;align-items:center;gap:8px}
 .nad-sl-dots{display:flex;align-items:center;gap:7px}
